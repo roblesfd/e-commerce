@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
 import ThemeContext from "./themeContext";
 
-const ThemeProvider = ({ children }) => {
+interface ThemeProviderProps {
+  children: React.ReactNode;
+}
+
+const ThemeProvider: React.FC<ThemeProviderProps> = ({ children }) => {
   const themeStorage =
     typeof localStorage !== "undefined" && localStorage.getItem("theme")
-      ? JSON.parse(localStorage.getItem("theme"))
+      ? JSON.parse(localStorage.getItem("theme") as string)
       : false;
   const [darkTheme, setDarkTheme] = useState(themeStorage);
   const [renderComponent, setRenderComponent] = useState(false);

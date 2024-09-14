@@ -1,17 +1,20 @@
-import { useState } from "react";
+import { faClose } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { useContext } from "react";
+import ModalContext from "../context/modalContext";
 
-const Modal = ({ content }) => {
-  const [modalOpen, setModalOpen] = useState(false);
-
-  const handleModalOpen = () => {
-    setModalOpen(true);
-  };
+const Modal = () => {
+  const { modal, setModal } = useContext(ModalContext);
+  const { isOpen, content } = modal;
 
   const handleModalClose = () => {
-    setModalOpen(false);
+    setModal({
+      isOpen: false,
+      content: null,
+    });
   };
 
-  const handleContainerClick = (e) => {
+  const handleContainerClick = (e: React.MouseEvent) => {
     // Verifica si el click no se hizo desde el ModalContent
     if (e.currentTarget === e.target) {
       handleModalClose();
@@ -20,25 +23,19 @@ const Modal = ({ content }) => {
 
   return (
     <>
-      <button
-        className="bg-blue-300 text-gray-900 px-4 py-2 rounded"
-        onClick={handleModalOpen}
-      >
-        Abrir modal
-      </button>
-      {modalOpen && (
+      {isOpen && (
         <div
-          className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-black bg-opacity-70 transition duration-300 ease-in-out"
+          id="modal"
+          className="fixed top-0 left-0 w-full h-full flex justify-center items-center bg-neutral-900  bg-opacity-80 transition duration-300 ease-in-out z-20"
           onClick={handleContainerClick}
         >
-          <div className="bg-white w-96 min-h-48 p-8 rounded shadow-md text-center">
-            <h2 className="text-xl font-bold mb-4">Titulo del Modal</h2>
-            {content}
+          <div className=" bg-white min-w-96 min-h-48 p-8 relative rounded  text-secondary-900  text-center">
+            <div>{content}</div>
             <button
-              className="bg-red-500 text-white px-4 py-2 mt-4 rounded"
+              className="absolute top-0 right-1 bg-transparent  p-2 mt-1 rounded"
               onClick={handleModalClose}
             >
-              Cerrar
+              <FontAwesomeIcon icon={faClose} />
             </button>
           </div>
         </div>

@@ -2,12 +2,14 @@ import { faBars, faClose } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import SearchBar from "../SearchBar";
 
 interface NavbarProps {
   children: any | any[];
   bgColor: string;
   title: string;
   size: "small" | "medium" | "large";
+  includesSearchBar?: boolean;
 }
 
 const Navbar: React.FC<NavbarProps> = ({
@@ -15,6 +17,7 @@ const Navbar: React.FC<NavbarProps> = ({
   bgColor = "white",
   title,
   size = "small",
+  includesSearchBar = false,
 }) => {
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
   const trimBgColor = bgColor.replace(/-\d+/g, "");
@@ -27,9 +30,16 @@ const Navbar: React.FC<NavbarProps> = ({
     <nav className={`bg-${bgColor}  ${paddingSize}  shadow-lg`}>
       <div className="flex justify-between items-center">
         {/* Logo */}
-        <section className="text-white text-2xl font-bold pl-6">
+        <section className="text-white text-2xl font-bold px-6">
           <Link to="/">{title}</Link>
         </section>
+        {/* Search bar (si aplica)*/}
+        {includesSearchBar && (
+          <section className="flex-1">
+            <SearchBar rounded="medium" width="70%" />
+          </section>
+        )}
+        {/* Mobile menu button */}
         <section className="md:hidden">
           <button
             onClick={() => setMobileMenuOpen(!isMobileMenuOpen)}

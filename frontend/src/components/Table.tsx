@@ -1,85 +1,83 @@
-import { faEdit, faEye, faTrash } from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
-import useAuth from "../hooks/useAuth";
+import React, { Children, ReactNode } from "react";
+import { filterChildrenByName } from "../utils/dataFormatFunctions";
 
-const Table = ({ cols, rows, actions }) => {
-  const { isAdmin } = useAuth();
+interface TableContainerProps {
+  children: ReactNode;
+  className?: string;
+}
+
+interface TableHeaderProps {
+  children: ReactNode;
+  className?: string;
+}
+
+interface TableFooterProps {
+  children: ReactNode;
+  className?: string;
+}
+
+interface TableRowProps {
+  children: ReactNode;
+  className?: string;
+}
+
+interface TableCellProps {
+  children: React.ReactNode;
+  className?: string;
+}
+
+const TableContainer: React.FC<TableContainerProps> = ({
+  children,
+  className = "",
+}) => {
+  const childrenArray = Children.toArray(children);
+
+  const tableHead = filterChildrenByName("TableHeader", childrenArray);
+  const tableRows = filterChildrenByName("TableRow", childrenArray);
+  const tableFooter = filterChildrenByName("TableFooter", childrenArray);
 
   return (
-    <div className="flex flex-col">
-      <div className="sm:-mx-6 lg:-mx-8">
-        <div className="inline-block py-2 sm:px-6 lg:px-8">
-          <div>
-            <table className="min-w-full text-left text-sm font-light">
-              <thead className="border-b font-medium dark:border-neutral-500">
-                <tr>
-                  {cols.map((col, key) => (
-                    <th scope="col" className="px-6 py-4" key={key}>
-                      {col}
-                    </th>
-                  ))}
-                </tr>
-              </thead>
-              <tbody>
-                {Object.values(rows).map((row, key) => (
-                  <tr
-                    key={key}
-                    className="border-b transition duration-300 ease-in-out hover:bg-neutral-100 dark:border-neutral-500 dark:hover:bg-neutral-600"
-                  >
-                    <td className="whitespace-nowrap px-6 py-4 font-medium">
-                      {row._id}
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4">
-                      {row.username}
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4">{row.email}</td>
-                    <td className="whitespace-nowrap px-6 py-4">{row.name}</td>
-                    <td className="whitespace-nowrap px-6 py-4">
-                      {row.lastname}
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4">
-                      {row.active ? "Activada" : "Desactivada"}
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4">{row.roles}</td>
-                    <td className="whitespace-nowrap px-6 py-4">
-                      {row.phoneNumber}
-                    </td>
-                    <td className="whitespace-nowrap px-6 py-4">
-                      <div className="flex justify-center gap-4">
-                        <Link
-                          to={`/panel/usuarios/${row._id}`}
-                          title="Ver usuario"
-                        >
-                          <FontAwesomeIcon icon={faEye} />
-                        </Link>
-                        {isAdmin && (
-                          <>
-                            <Link
-                              to={`/panel/usuarios/${row._id}/editar`}
-                              title="Editar usuario"
-                            >
-                              <FontAwesomeIcon icon={faEdit} />
-                            </Link>
-                            <button
-                              onClick={() => actions(row._id)}
-                              title="Eliminar usuario"
-                            >
-                              <FontAwesomeIcon icon={faTrash} />
-                            </button>
-                          </>
-                        )}
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+    <div className={`overflow-x-auto ${className}`}>
+      <table className="min-w-full table-auto">
+        {tableHead.length > 0 && <thead>{tableHead}</thead>}
+        <tbody>
+          {tableRows.length > 0 &&
+            tableRows.map((tableRow, index) => (
+              <React.Fragment key={index}>{tableRow}</React.Fragment>
+            ))}
+        </tbody>
+        {tableFooter.length > 0 && <tfoot>{tableFooter}</tfoot>}
+      </table>
     </div>
   );
 };
 
-export default Table;
+const TableHeader: React.FC<TableHeaderProps> = ({
+  children,
+  className = "",
+}) => {
+  return <TableRow className={`bg-gray-200 ${className}`}>{children}</TableRow>;
+};
+
+const TableFooter: React.FC<TableFooterProps> = ({
+  children,
+  className = "",
+}) => {
+  return <TableRow className={`bg-gray-200 ${className}`}>{children}</TableRow>;
+};
+
+const TableRow: React.FC<TableRowProps> = ({ children, className = "" }) => {
+  return (
+    <tr className={`border-b ${className}`}>
+      {Children.map(children, (child, index) => (
+        <TableCell key={index}>{child}</TableCell>
+      ))}
+    </tr>
+  );
+};
+
+const TableCell: React.FC<TableCellProps> = ({ children, className = "" }) => {
+  return <td className={`px-4 py-2 ${className}`}>{children}</td>;
+};
+
+export { TableContainer, TableHeader, TableRow, TableFooter, TableCell };

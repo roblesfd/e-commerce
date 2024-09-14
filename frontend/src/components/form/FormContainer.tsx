@@ -1,8 +1,6 @@
 import { Formik } from "formik";
 import { Children, isValidElement, ReactNode } from "react";
-
-const filterChildren = (childName, arre) =>
-  arre.filter((child) => child.type.name === childName);
+import { filterChildrenByName } from "../../utils/dataFormatFunctions";
 
 const generateInitialValues = (
   inputList: ReactNode[]
@@ -26,9 +24,9 @@ const FormContainer: React.FC<FormContainerProps> = ({
   checkoutSchema,
 }) => {
   const childrenArray = Children.toArray(children);
-  const header = filterChildren("FormHeader", childrenArray)[0];
-  const inputList = filterChildren("FormInput", childrenArray);
-  const footer = filterChildren("FormFooter", childrenArray)[0];
+  const header = filterChildrenByName("FormHeader", childrenArray)[0];
+  const inputList = filterChildrenByName("FormInput", childrenArray);
+  const footer = filterChildrenByName("FormFooter", childrenArray)[0];
 
   const initialValues = generateInitialValues(inputList);
 
@@ -48,9 +46,7 @@ const FormContainer: React.FC<FormContainerProps> = ({
           {(formik) => {
             return (
               <form onSubmit={formik.handleSubmit}>
-                {inputList.map(
-                  (input, index) => isValidElement(input) && input
-                )}
+                {inputList.map((input) => isValidElement(input) && input)}
                 {isValidElement(footer) && footer}
               </form>
             );

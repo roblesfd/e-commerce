@@ -4,11 +4,17 @@ import { BrowserRouter } from "react-router-dom";
 import App from "./App.tsx";
 
 import "./index.css";
+import SidebarProvider from "./context/SidebarProvider.tsx";
+import ModalProvider from "./context/ModalProvider.tsx";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <SidebarProvider>
+      <ModalProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ModalProvider>
+    </SidebarProvider>
   </StrictMode>
 );
