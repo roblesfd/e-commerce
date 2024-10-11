@@ -5,6 +5,7 @@
 @layer base {
   body {
     font-family: "Roboto";
+    color: "#04660d";
   }
 
   select {
@@ -13,5 +14,29 @@
 
   select > * {
     font-family: "Roboto";
+  }
+  .range-slider-thumb::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #007bff;
+    cursor: pointer;
+    position: relative;
+    z-index: 10;
+  }
+
+  .range-slider-thumb::-moz-range-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: #007bff;
+    cursor: pointer;
+    z-index: 10;
+  }
+
+  .range-slider-thumb {
+    z-index: 10;
   }
 }

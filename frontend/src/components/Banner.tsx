@@ -1,18 +1,26 @@
+import { ReactNode } from "react";
+
 interface BannerProps {
-  children: any | any[];
+  children: ReactNode | ReactNode[];
   bannerImg?: string;
+  backgroundColor?: string;
 }
 
-const Banner: React.FC<BannerProps> = ({ children, bannerImg }) => {
+const Banner: React.FC<BannerProps> = ({
+  children,
+  bannerImg = "",
+  backgroundColor = "",
+}) => {
+  const bannerStyles = bannerImg
+    ? { backgroundImage: `url(${bannerImg})` }
+    : undefined;
   return (
     <div
-      className="bg-blue-500 text-white bg-cover bg-center w-full h-full"
-      style={{ backgroundImage: `url(${bannerImg})` }}
+      className={`text-white bg-cover bg-center w-full h-full ${backgroundColor}`}
+      style={bannerStyles}
     >
-      <div className="bg-black bg-opacity-50 w-full h-full">
-        <div className="px-4 py-16 flex flex-col justify-center items-center h-full">
-          {children}
-        </div>
+      <div className="px-4 py-16 flex flex-col justify-center items-center h-full">
+        {children}
       </div>
     </div>
   );

@@ -1,11 +1,29 @@
 import { faChevronDown, faChevronUp } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import React, { useState } from "react";
+import { useState } from "react";
 
-const Accordion = ({ items, bgColor, color, size, bordered }) => {
-  const [openIndex, setOpenIndex] = useState(null);
+interface AccordionItem {
+  title: string;
+  content: React.ReactNode;
+}
 
-  const handleToggle = (index) => {
+interface AccordionProps {
+  items: AccordionItem[];
+  bgColor?: string;
+  color?: string;
+  size?: "small" | "medium" | "large" | "extraLarge";
+  bordered?: boolean;
+}
+const Accordion: React.FC<AccordionProps> = ({
+  items,
+  bgColor = "white",
+  color = "gray-900",
+  size = "medium",
+  bordered = false,
+}) => {
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const handleToggle = (index: number) => {
     setOpenIndex(openIndex === index ? null : index);
   };
 
@@ -25,10 +43,10 @@ const Accordion = ({ items, bgColor, color, size, bordered }) => {
       {items.map((item, index) => (
         <div
           key={index}
-          className={`${bordered ? "border-gray-200" : ""} rounded `}
+          className={`${bordered && "border border-gray-500"} rounded `}
         >
           <button
-            className={`w-full ${paddingSize} text-left bg-${bgColor} ${color} font-semibold focus:outline-none flex justify-between items-center`}
+            className={`w-full ${paddingSize} text-left bg-${bgColor} text-${color} font-semibold focus:outline-none flex justify-between items-center`}
             onClick={() => handleToggle(index)}
           >
             {item.title}

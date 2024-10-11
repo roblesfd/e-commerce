@@ -1,7 +1,7 @@
 import React from "react";
 
 interface FooterItemProps {
-  children: any | any[];
+  children: React.ReactNode | React.ReactNode[];
 }
 
 const FooterItem: React.FC<FooterItemProps> = ({ children }) => {

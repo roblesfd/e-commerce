@@ -7,7 +7,11 @@ export interface NavItemProps {
   to?: string;
   onClick?: () => void;
   dropdownTitle?: string | JSX.Element;
-  dropdownItems?: any[];
+  dropdownItems?: {
+    to: string;
+    label?: string;
+    icon?: JSX.Element;
+  }[];
 }
 
 const NavbarItem: React.FC<NavItemProps> = ({

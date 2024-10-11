@@ -14,17 +14,19 @@ import { useContext } from "react";
 import SidebarContext from "../context/sidebarContext";
 import Sidebar from "./Sidebar";
 import ProductItem from "../features/product/ProductItem";
+import CategoryNavbar from "./CategoryNavbar";
+import { categoryNavbarData } from "../utils/mockData";
 
 const dropdownItemsData = [
-  { to: "/", product: "Perfil" },
-  { to: "/", product: "Configuración" },
-  { to: "/", product: "Cerrar sesión" },
+  { to: "/mi-cuenta", label: "Mi cuenta" },
+  { to: "/", label: "Configuración" },
+  { to: "/", label: "Cerrar sesión" },
 ];
 
 const footerElement = (
   <FooterContainer
     size="small"
-    bottomText="© 2024 Helpdesk. Todos los derechos reservados"
+    bottomText="© 2024 E-commerce. Todos los derechos reservados"
   >
     <FooterItem>
       <Link to="/">
@@ -53,14 +55,12 @@ const MainLayout: React.FC = () => {
       size="small"
       includesSearchBar={true}
     >
-      <NavbarItem type="link" label="Acerca de" to="/" />
-      <NavbarItem type="link" label="Productos" to="/" />
-      <NavbarItem type="button" label="Productos" />
+      <NavbarItem type="link" label="Mis pedidos" to="/mis-pedidos" />
       <NavbarItem
         type="dropdown"
         dropdownTitle={<FontAwesomeIcon icon={faUser} />}
         dropdownItems={dropdownItemsData}
-        to="/"
+        to="#"
       />
       <NavbarItem
         type="button"
@@ -77,36 +77,39 @@ const MainLayout: React.FC = () => {
   return (
     <>
       {navbarElement}
+      <CategoryNavbar categories={categoryNavbarData} bgColor="slate-50" />
       <div className="flex">
-        <main className="min-h-screen w-full overflow-scroll bg-primary-30">
+        <main className="min-h-screen w-full overflow-scroll bg-primary-20 dark:bg-primary-800">
           <Outlet />
         </main>
         {sidebar && (
-          <Sidebar isExtensible={true} bgColor="white">
-            <li className="text-center mb-6">
-              <h3 className="text-[14px] text-black">Subtotal:</h3>
-              <span className="font-semibold text-black">$750.00</span>
-              <div className="my-2">
-                <Link
-                  to="/"
-                  className="rounded-md  border-2 text-white  border-secondary-500  bg-secondary-500 hover:bg-secondary-600 hover:border-secondary-600 px-2 py-1"
-                >
-                  Ir al carrito
-                </Link>
-              </div>
-            </li>
-            {Array(5)
-              .fill({ ...productObj })
-              .map((product) => (
-                <li>
-                  <ProductItem
-                    key={product.id}
-                    product={product}
-                    itemWidth={100}
-                    direction="col"
-                  />
-                </li>
-              ))}
+          <Sidebar isExtensible={true} bgColor="zinc-50">
+            <ul className="pb-10">
+              <li className="text-center mb-6">
+                <h3 className="text-[14px] text-black">Subtotal:</h3>
+                <span className="font-semibold text-black">$750.00</span>
+                <div className="my-2">
+                  <Link
+                    to="/"
+                    className="rounded-md  border-2 text-white  border-secondary-500  bg-secondary-500 hover:bg-secondary-600 hover:border-secondary-600 px-2 py-1"
+                  >
+                    Ir al carrito
+                  </Link>
+                </div>
+              </li>
+              {Array(8)
+                .fill({ ...productObj })
+                .map((product) => (
+                  <li>
+                    <ProductItem
+                      key={product.id}
+                      product={product}
+                      itemWidth={100}
+                      direction="col"
+                    />
+                  </li>
+                ))}
+            </ul>
           </Sidebar>
         )}
       </div>

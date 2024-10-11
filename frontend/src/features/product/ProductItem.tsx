@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import Badge from "../../components/Badge";
 import StarRating from "../../components/StarsReview";
+import Button from "../../components/Button";
 
 interface ProductItemProps {
   product: {
@@ -15,12 +16,14 @@ interface ProductItemProps {
   };
   itemWidth: number;
   direction?: string;
+  addToCartButton?: boolean;
 }
 
 const ProductItem: React.FC<ProductItemProps> = ({
   product,
   itemWidth,
   direction = "col",
+  addToCartButton = false,
 }) => {
   const { image, name, description, price, discountedPrice, stars, promotion } =
     product;
@@ -88,6 +91,7 @@ const ProductItem: React.FC<ProductItemProps> = ({
           {price && (
             <p className="text-gray-800 font-semibold text-lg">{price}</p>
           )}
+          {addToCartButton && <Button label="Añadir" />}
         </div>
       </section>
     </div>

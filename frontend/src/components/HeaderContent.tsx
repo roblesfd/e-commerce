@@ -1,4 +1,12 @@
-const HeaderContent = ({ title, description }) => {
+interface HeaderContentProps {
+  title: string;
+  description: string;
+}
+
+const HeaderContent: React.FC<HeaderContentProps> = ({
+  title,
+  description,
+}) => {
   return (
     <div className="space-y-4 mb-4 sm:mb-6">
       <h1 className="text-2xl font-bold">{title}</h1>

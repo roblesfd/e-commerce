@@ -27,7 +27,7 @@ const Navbar: React.FC<NavbarProps> = ({
     size === "small" ? "text-sm" : size === "medium" ? "text-md" : "text-lg";
 
   return (
-    <nav className={`bg-${bgColor}  ${paddingSize}  shadow-lg`}>
+    <nav className={`bg-${bgColor}  ${paddingSize}`}>
       <div className="flex justify-between items-center">
         {/* Logo */}
         <section className="text-white text-2xl font-bold px-6">

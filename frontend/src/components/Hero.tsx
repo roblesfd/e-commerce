@@ -1,5 +1,7 @@
+import { ReactNode } from "react";
+
 interface HeroProps {
-  children: any | any[];
+  children: ReactNode | ReactNode[];
   heroImg?: string;
 }
 

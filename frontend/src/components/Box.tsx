@@ -1,4 +1,10 @@
-const Box = ({ children, size = "small" }) => {
+interface BoxProps {
+  children: React.ReactNode[] | React.ReactNode;
+  size?: string;
+  shadow?: boolean;
+}
+
+const Box: React.FC<BoxProps> = ({ children, size = "small", shadow = "" }) => {
   return (
     <div
       className={`${
@@ -9,7 +15,7 @@ const Box = ({ children, size = "small" }) => {
           : size === "large"
           ? "p-3 md:p-7"
           : ""
-      }  w-full h-full rounded bg-white dark:bg-primary-950 shadow-lg`}
+      }  w-full h-full rounded bg-zinc-50 dark:bg-primary-800 ${shadow}-lg`}
     >
       {children}
     </div>

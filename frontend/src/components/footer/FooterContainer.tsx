@@ -1,7 +1,7 @@
 import React from "react";
 
 interface FooterContainerProps {
-  children: any | any[];
+  children: React.ReactNode | React.ReactNode[];
   size: "small" | "medium" | "large";
   bottomText?: string;
 }

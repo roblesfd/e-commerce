@@ -1,6 +1,6 @@
 import Slider from "../components/slider/Slider";
 import {
-  categoryNavbarData,
+  // categoryNavbarData,
   productData,
   productObj,
   productObj2,
@@ -8,23 +8,22 @@ import {
 import Hero from "../components/Hero";
 import heroImg from "../assets/hero-1.jpg";
 import { Link } from "react-router-dom";
-import CategoryNavbar from "../components/CategoryNavbar";
+// import CategoryNavbar from "../components/CategoryNavbar";
 import Box from "../components/Box";
 import ProductItem from "../features/product/ProductItem";
 import Banner from "../components/Banner";
 
 const Home = () => {
-  // const genBooks = bookGenerator(10);
-  const visItemsNumber = 4;
+  const visibleItemsNumber = 4;
 
   return (
     <>
-      <CategoryNavbar categories={categoryNavbarData} bgColor="slate-50" />
+      {/* <CategoryNavbar categories={categoryNavbarData} bgColor="slate-50" /> */}
       <div id="main-content">
         <section id="hero-slider">
           <Slider data={productData} visibleItemsNumber={1}>
-            {productData.map((product) => (
-              <Hero heroImg={heroImg}>
+            {productData.map((product, index) => (
+              <Hero key={index} heroImg={heroImg}>
                 <h1 className="text-5xl font-bold mb-4">
                   ECOMMERCE PROMOCIONES
                 </h1>
@@ -45,12 +44,12 @@ const Home = () => {
           </Slider>
         </section>
         <section id="featured-products" className="my-4 md:my-10">
-          <Slider data={productData} visibleItemsNumber={visItemsNumber}>
+          <Slider data={productData} visibleItemsNumber={visibleItemsNumber}>
             {productData.map((product) => (
               <ProductItem
                 key={product.id}
                 product={product}
-                itemWidth={100 / visItemsNumber}
+                itemWidth={100 / visibleItemsNumber}
                 direction="col"
               />
             ))}
@@ -97,12 +96,10 @@ const Home = () => {
                   />
                 </div>
               </div>
-              <footer className="w-full">
-                <div className="text-center">
-                  <Link to="/" className="text-sm text-blue-600 font-medium ">
-                    Ver más
-                  </Link>
-                </div>
+              <footer className="w-full text-center">
+                <Link to="/" className="text-sm text-blue-600 font-medium ">
+                  Ver más
+                </Link>
               </footer>
             </Box>
             <Box>
@@ -139,12 +136,10 @@ const Home = () => {
                   />
                 </div>
               </div>
-              <footer className="w-full">
-                <div className="text-center">
-                  <Link to="/" className="text-sm text-blue-600 font-medium ">
-                    Ver más
-                  </Link>
-                </div>
+              <footer className="w-full text-center">
+                <Link to="/" className="text-sm text-blue-600 font-medium ">
+                  Ver más
+                </Link>
               </footer>
             </Box>
             <div className="col-span-2 h-full">
@@ -153,34 +148,15 @@ const Home = () => {
                   <h3 className="text-lg font-semibold">Seguir comprando</h3>
                 </header>
                 <div className="grid grid-cols-2 gap-4">
-                  <div className="col-span-1">
-                    <ProductItem
-                      product={productData[0]}
-                      itemWidth={100}
-                      direction="row"
-                    />
-                  </div>
-                  <div className="col-span-1">
-                    <ProductItem
-                      product={productData[0]}
-                      itemWidth={100}
-                      direction="row"
-                    />
-                  </div>
-                  <div className="col-span-1">
-                    <ProductItem
-                      product={productData[0]}
-                      itemWidth={100}
-                      direction="row"
-                    />
-                  </div>
-                  <div className="col-span-1">
-                    <ProductItem
-                      product={productData[0]}
-                      itemWidth={100}
-                      direction="row"
-                    />
-                  </div>
+                  {[...productData].slice(0, 4).map((product) => (
+                    <div className="col-span-1">
+                      <ProductItem
+                        product={product}
+                        itemWidth={100}
+                        direction="row"
+                      />
+                    </div>
+                  ))}
                 </div>
               </Box>
             </div>
@@ -256,12 +232,12 @@ const Home = () => {
           <h2 className="text-xl font-semibold mb-6">
             Productos de X categoría
           </h2>
-          <Slider data={productData} visibleItemsNumber={visItemsNumber}>
+          <Slider data={productData} visibleItemsNumber={visibleItemsNumber}>
             {productData.map((product) => (
               <ProductItem
                 key={product.id}
                 product={product}
-                itemWidth={100 / visItemsNumber}
+                itemWidth={100 / visibleItemsNumber}
                 direction="col"
               />
             ))}

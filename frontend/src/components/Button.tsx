@@ -13,7 +13,7 @@ type ButtonVariant =
 type ButtonSize = "small" | "medium" | "large";
 
 interface ButtonProps {
-  label: string;
+  label?: string;
   onClick?: () => void;
   variant?: ButtonVariant;
   size?: ButtonSize;
@@ -26,7 +26,7 @@ interface ButtonProps {
 }
 
 const Button: React.FC<ButtonProps> = ({
-  label,
+  label = "",
   onClick,
   variant = "primary",
   size = "medium",
@@ -73,8 +73,8 @@ const Button: React.FC<ButtonProps> = ({
       onClick={onClick}
       disabled={disabled}
     >
-      {label}
-      {icon && <FontAwesomeIcon icon={icon} className="ml-4" />}
+      {label && label}
+      {icon && <FontAwesomeIcon icon={icon} className={`${label && "ml-4"}`} />}
     </button>
   );
 };

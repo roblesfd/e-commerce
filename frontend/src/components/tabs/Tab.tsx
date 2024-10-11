@@ -1,4 +1,11 @@
-const Tab = ({ title, setActiveTab, activeTab, data }) => {
+interface TabProps {
+  title: string;
+  setActiveTab: (data: string) => void;
+  activeTab: string;
+  data: string;
+}
+
+const Tab: React.FC<TabProps> = ({ title, setActiveTab, activeTab, data }) => {
   return (
     <button
       className={`py-2 px-4 ${

@@ -1,19 +1,25 @@
-require("dotenv").config();
-require("express-async-errors");
-const express = require("express");
+import dotenv from "dotenv";
+import "express-async-errors";
+import express, { Request, Response } from "express";
+import cookieParser from "cookie-parser";
+import path from "path";
+import mongoose from "mongoose";
+import cors from "cors";
+
+import connectDB from "./config/dbConnection";
+import corsOptions from "./config/corsOptions";
+import { logger, logEvents } from "./middleware/logger";
+import errorHandler from "./middleware/errorHandler";
+import userRoutes from "./routes/userRoutes";
+
+dotenv.config();
+
 const app = express();
-const cookieParser = require("cookie-parser");
 const PORT = process.env.PORT || 3500;
-const path = require("path");
-const mongoose = require("mongoose");
-const connectDB = require("./config/dbConnection");
-const corsOptions = require("./config/corsOptions");
-const { logger, logEvents } = require("./middleware/logger");
-const errorHandler = require("./middleware/errorHandler");
-const cors = require("cors");
 
 connectDB();
 
+// Middlewares
 app.use(logger);
 app.use(cors(corsOptions));
 app.use(express.json({ limit: "10mb" }));
@@ -21,23 +27,26 @@ app.use(express.urlencoded({ limit: "10mb", extended: true }));
 app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "public")));
 
+// Rutas
 // app.use("/", require("./routes/root"));
-app.use("/usuarios", require("./routes/userRoutes"));
+app.use("/usuarios", userRoutes);
 
-// Manejo de 404
-app.all("/*", (req, res) => {
+// Manejo de rutas no encontradas (404)
+app.all("/*", (req: Request, res: Response) => {
   res.status(404);
   if (req.accepts("html")) {
     res.sendFile(path.join(__dirname, "views", "404.html"));
   } else if (req.accepts("json")) {
     res.json({ message: "404 Página no encontrada" });
   } else {
-    res.type("txt".send("404 Página no encontrada"));
+    res.type("txt").send("404 Página no encontrada");
   }
 });
 
+// Middleware de manejo de errores
 app.use(errorHandler);
 
+// Conexión a MongoDB y escucha en el puerto
 mongoose.connection.once("open", () => {
   console.log("Conectado a MongoDB");
   app.listen(PORT, () => {
@@ -45,7 +54,7 @@ mongoose.connection.once("open", () => {
   });
 });
 
-mongoose.connection.on("error", (err) => {
+mongoose.connection.on("error", (err: any) => {
   console.log(err);
   logEvents(
     `${err.no}: ${err.code}\t${err.syscall}\t${err.hostname}`,

@@ -6,7 +6,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 interface SidebarProps {
-  children: React.ReactNode[];
+  children: React.ReactNode[] | React.ReactNode;
   isExtensible: boolean;
   bgColor: string;
 }
@@ -26,7 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({
     <div
       className={`flex h-auto ${
         isOpen || isExtensible ? "w-48" : "w-20"
-      } transition-width duration-300 bg-${bgColor}`}
+      } transition-width duration-300 bg-${bgColor} dark:bg-${bgColor}]`}
     >
       <div className="flex flex-col w-full">
         {!isExtensible && (

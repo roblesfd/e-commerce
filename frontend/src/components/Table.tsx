@@ -31,7 +31,6 @@ const TableContainer: React.FC<TableContainerProps> = ({
   className = "",
 }) => {
   const childrenArray = Children.toArray(children);
-
   const tableHead = filterChildrenByName("TableHeader", childrenArray);
   const tableRows = filterChildrenByName("TableRow", childrenArray);
   const tableFooter = filterChildrenByName("TableFooter", childrenArray);

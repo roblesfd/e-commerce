@@ -2,7 +2,17 @@ import { faTimes } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 
-const TagsInput = ({ tagData, onTagsChange, isDisabled = false }) => {
+interface TagsInputProps {
+  tagData: any[];
+  onTagsChange: (tagData) => void;
+  isDisabled: boolean;
+}
+
+const TagsInput: React.FC<TagsInputProps> = ({
+  tagData,
+  onTagsChange,
+  isDisabled = false,
+}) => {
   const [tags, setTags] = useState(tagData || []);
   const [inputValue, setInputValue] = useState("");
 
@@ -17,7 +27,7 @@ const TagsInput = ({ tagData, onTagsChange, isDisabled = false }) => {
     }
   };
 
-  const handleRemoveTag = (indexToRemove) => {
+  const handleRemoveTag = (indexToRemove: number) => {
     setTags(tags.filter((_, index) => index !== indexToRemove));
   };
 
