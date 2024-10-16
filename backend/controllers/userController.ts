@@ -1,21 +1,23 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
 import { Request, Response } from "express";
+import { emailConfirmacion } from "../middleware/emailSender";
+import crypto from "crypto";
 
 // @desc Obtiene todos los usuarios
 // @route GET /users
 // @access Private
-const getAllUsers = async (req: Request, res: Response): Promise<void> => {
+const getAllUsers = async (req: Request, res: Response): Promise<any> => {
   try {
     const users = await User.find().select("-password").lean();
     if (!users?.length) {
-      res.status(404).json({ message: "No hay usuarios" });
-      return;
+      return res.status(404).json({ message: "No hay usuarios" });
     }
-    res.json(users);
+    console.log(users);
+    return res.json(users);
   } catch (error) {
     if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({ message: error.message });
     }
   }
 };
@@ -23,12 +25,13 @@ const getAllUsers = async (req: Request, res: Response): Promise<void> => {
 // @desc Crea un usuario
 // @route POST /users
 // @access Private
-const createUser = async (req: Request, res: Response): Promise<void> => {
+const createUser = async (req: Request, res: Response): Promise<any> => {
   const { username, password, email, name, lastname, role } = req.body;
 
-  if (!username || !password || !email) {
-    res.status(400).json({ message: "Todos los campos son obligatorios" });
-    return;
+  if (!username || !password || !email || !name || !lastname) {
+    return res
+      .status(400)
+      .json({ message: "Todos los campos son obligatorios" });
   }
 
   try {
@@ -37,19 +40,17 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
       .lean();
 
     if (duplicatedUser) {
-      res.status(409).json({ message: "Nombre de usuario duplicado" });
-      return;
+      return res.status(409).json({ message: "Nombre de usuario duplicado" });
     }
 
     const duplicatedEmail = await User.findOne({ email }).lean().exec();
 
     if (duplicatedEmail) {
-      res.status(409).json({ message: "Correo electrónico duplicado" });
-      return;
+      return res.status(409).json({ message: "Correo electrónico duplicado" });
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    let token: string | undefined;
+    let token = crypto.randomBytes(20).toString("hex");
 
     const user = await User.create({
       username,
@@ -62,15 +63,23 @@ const createUser = async (req: Request, res: Response): Promise<void> => {
     });
 
     if (user) {
-      res.status(201).json({ message: `Nuevo usuario: ${username}` });
+      // if (isClient) {
+      emailConfirmacion({
+        nombre: user.username,
+        email: user.email,
+        token: user.token,
+      });
+      // }
+      return res.status(201).json({ message: `Nuevo usuario: ${username}` });
     } else {
-      res.status(400).json({ message: "Error al crear un usuario" });
+      return res.status(400).json({ message: "Error al crear un usuario" });
     }
   } catch (error) {
     if (error instanceof Error) {
-      res.status(500).json({ message: error.message });
+      return res.status(500).json({ message: error.message });
     }
   }
+  return;
 };
 
 // @desc Obtiene un usuario
@@ -91,6 +100,7 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
       res.status(500).json({ message: error.message });
     }
   }
+  return;
 };
 
 // @desc Actualiza datos de usuario

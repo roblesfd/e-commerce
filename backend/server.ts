@@ -11,6 +11,7 @@ import corsOptions from "./config/corsOptions";
 import { logger, logEvents } from "./middleware/logger";
 import errorHandler from "./middleware/errorHandler";
 import userRoutes from "./routes/userRoutes";
+import authRoutes from "./routes/authRoutes";
 
 dotenv.config();
 
@@ -28,8 +29,8 @@ app.use(cookieParser());
 app.use("/", express.static(path.join(__dirname, "public")));
 
 // Rutas
-// app.use("/", require("./routes/root"));
 app.use("/usuarios", userRoutes);
+app.use("/auth", authRoutes);
 
 // Manejo de rutas no encontradas (404)
 app.all("/*", (req: Request, res: Response) => {

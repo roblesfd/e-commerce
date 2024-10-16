@@ -16,11 +16,13 @@ const generateInitialValues = (
 
 interface FormContainerProps {
   children: ReactNode;
+  onSubmit: (...args: any[]) => void;
   checkoutSchema?: object;
 }
 
 const FormContainer: React.FC<FormContainerProps> = ({
   children,
+  onSubmit,
   checkoutSchema,
 }) => {
   const childrenArray = Children.toArray(children);
@@ -31,7 +33,7 @@ const FormContainer: React.FC<FormContainerProps> = ({
   const initialValues = generateInitialValues(inputList);
 
   const onSaveUserClicked = (values: typeof initialValues) => {
-    console.log(values);
+    onSubmit(values);
   };
 
   return (

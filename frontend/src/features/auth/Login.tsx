@@ -4,16 +4,17 @@ import FormHeader from "../../components/form/FormHeader";
 import FormInput from "../../components/form/FormInput";
 import FormFooter from "../../components/form/FormFooter";
 import { loginSchema } from "./inputValidationSchema";
+import { onLogin } from "./apiAuth";
 
 const Login = () => {
   return (
     <div className="min-h-screen flex items-center justify-center bg-primary-50 dark:bg-secondary-900 dark:text-secondary-50">
-      <FormContainer checkoutSchema={loginSchema}>
+      <FormContainer checkoutSchema={loginSchema} onSubmit={onLogin}>
         <FormHeader title="Iniciar sesión" />
         <FormInput
-          inputType="email"
-          labelText="Correo electrónico"
-          inputName="email"
+          inputType="text"
+          labelText="Nombre de usuario"
+          inputName="username"
         />
         <FormInput
           inputType="password"

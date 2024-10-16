@@ -16,11 +16,12 @@ import Sidebar from "./Sidebar";
 import ProductItem from "../features/product/ProductItem";
 import CategoryNavbar from "./CategoryNavbar";
 import { categoryNavbarData } from "../utils/mockData";
+import { onLogout } from "../features/auth/apiAuth";
 
-const dropdownItemsData = [
+const dropdownNavbarData = [
   { to: "/mi-cuenta", label: "Mi cuenta" },
   { to: "/", label: "Configuración" },
-  { to: "/", label: "Cerrar sesión" },
+  { type: "button", label: "Cerrar sesión", onClick: onLogout },
 ];
 
 const footerElement = (
@@ -48,6 +49,7 @@ const footerElement = (
 
 const MainLayout: React.FC = () => {
   const { sidebar, setSidebar } = useContext(SidebarContext);
+
   const navbarElement = (
     <Navbar
       bgColor="primary-500"
@@ -59,8 +61,7 @@ const MainLayout: React.FC = () => {
       <NavbarItem
         type="dropdown"
         dropdownTitle={<FontAwesomeIcon icon={faUser} />}
-        dropdownItems={dropdownItemsData}
-        to="#"
+        dropdownItems={dropdownNavbarData}
       />
       <NavbarItem
         type="button"

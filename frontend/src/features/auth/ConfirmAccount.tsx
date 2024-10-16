@@ -1,13 +1,50 @@
-import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useParams } from "react-router-dom";
 
 const ConfirmAccount = () => {
-  let content;
-  const success = true;
+  const [success, setSuccess] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(true);
+  const { token } = useParams();
 
-  if (success) {
+  const confirmAccountWithToken = async () => {
+    try {
+      const response = await fetch(
+        import.meta.env.VITE_BACKEND_URL + "/auth/confirmar/" + token,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.ok) {
+        setSuccess(true);
+      }
+    } catch (error) {
+      console.error("Hubo un problema con la confirmación de la cuenta.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    confirmAccountWithToken();
+  }, []);
+
+  let content;
+
+  if (loading) {
     content = (
       <div className="text-center">
-        <h2 className="text-2xl font-bold  mb-6">
+        <h2 className="text-2xl font-bold mb-6">Cargando...</h2>
+        <p>Por favor espera mientras confirmamos tu cuenta.</p>
+      </div>
+    );
+  } else if (success) {
+    content = (
+      <div className="text-center">
+        <h2 className="text-2xl font-bold mb-6">
           Tu cuenta ha sido confirmada exitosamente
         </h2>
         <p className="font-bold">
@@ -18,7 +55,7 @@ const ConfirmAccount = () => {
   } else {
     content = (
       <div className="text-center">
-        <h2 className="text-2xl font-bold  mb-6">Error</h2>
+        <h2 className="text-2xl font-bold mb-6">Error</h2>
         <p>El enlace solicitado ya no está disponible</p>
         <p className="mt-8 hover:text-black font-bold">
           <Link to={`/`}>Volver al inicio</Link>

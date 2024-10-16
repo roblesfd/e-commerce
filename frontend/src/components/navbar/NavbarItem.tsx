@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { Dropdown } from "../Dropdown";
+import { Dropdown, DropdownItemProps } from "../Dropdown";
 
 export interface NavItemProps {
   type: "link" | "button" | "dropdown";
@@ -7,11 +7,7 @@ export interface NavItemProps {
   to?: string;
   onClick?: () => void;
   dropdownTitle?: string | JSX.Element;
-  dropdownItems?: {
-    to: string;
-    label?: string;
-    icon?: JSX.Element;
-  }[];
+  dropdownItems?: DropdownItemProps[];
 }
 
 const NavbarItem: React.FC<NavItemProps> = ({

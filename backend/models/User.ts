@@ -15,6 +15,8 @@ interface IUser {
     country: string;
   };
   orders: Types.ObjectId[];
+  token: string;
+  active: boolean;
 }
 
 const UserSchema: Schema<IUser> = new mongoose.Schema(
@@ -33,6 +35,8 @@ const UserSchema: Schema<IUser> = new mongoose.Schema(
       country: { type: String },
     },
     orders: [{ type: Schema.Types.ObjectId, ref: "Order" }],
+    token: { type: String },
+    active: { type: Boolean, default: false },
   },
   { timestamps: true }
 );

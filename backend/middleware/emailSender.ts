@@ -19,12 +19,12 @@ const emailConfirmacion = async (datos: EmailDatos): Promise<void> => {
   const { nombre, email, token } = datos;
 
   await transport.sendMail({
-    from: "Helpdesk",
+    from: "E-commerce",
     to: email,
-    subject: "Confirma tu cuenta de Helpdesk.com",
-    text: "Confirma tu cuenta en Helpdesk.com",
+    subject: "Confirma tu cuenta de e-commerce.com",
+    text: "Confirma tu cuenta en e-commerce.com",
     html: `
-      <p>Hola ${nombre}, confirma tu cuenta en helpdesk.com</p>
+      <p>Hola ${nombre}, confirma tu cuenta en e-commerce.com</p>
       <p>Tu cuenta ya esta lista, solo debes confirmarla en el siguiente enlace:
       <a href="${process.env.FRONTEND_URL_DEV}/confirmar/${token}">Confirmar cuenta</a>
       <p>Si no creaste esta cuenta, puedes ignorar el mensaje</p>
@@ -45,12 +45,12 @@ const emailOlvidePassword = async (datos: EmailDatos): Promise<void> => {
   const { email, nombre, token } = datos;
 
   await transport.sendMail({
-    from: "Helpdesk",
+    from: "e-commerce",
     to: email,
-    subject: "Reestablece tu contraseña de Helpdesk.com",
-    text: "Reestablece tu contraseña en Helpdesk.com",
+    subject: "Reestablece tu contraseña de e-commerce.com",
+    text: "Reestablece tu contraseña en e-commerce.com",
     html: `
-      <p>Hola ${nombre}, has solicitado reestablecer tu contraseña en helpdesk.com</p>
+      <p>Hola ${nombre}, has solicitado reestablecer tu contraseña en e-commerce.com</p>
       <p>Haz clic en el siguiente enlace para generar una contraseña nueva:
       <a href="${process.env.FRONTEND_URL_PROD}/auth/olvide-password/${token}">Reestablecer contraseña</a>
       </p>

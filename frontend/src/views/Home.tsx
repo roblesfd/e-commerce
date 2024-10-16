@@ -1,24 +1,18 @@
 import Slider from "../components/slider/Slider";
-import {
-  // categoryNavbarData,
-  productData,
-  productObj,
-  productObj2,
-} from "../utils/mockData";
+import { productData, productObj, productObj2 } from "../utils/mockData";
 import Hero from "../components/Hero";
 import heroImg from "../assets/hero-1.jpg";
 import { Link } from "react-router-dom";
-// import CategoryNavbar from "../components/CategoryNavbar";
 import Box from "../components/Box";
 import ProductItem from "../features/product/ProductItem";
 import Banner from "../components/Banner";
 
 const Home = () => {
   const visibleItemsNumber = 4;
+  // console.log(sessionStorage);
 
   return (
     <>
-      {/* <CategoryNavbar categories={categoryNavbarData} bgColor="slate-50" /> */}
       <div id="main-content">
         <section id="hero-slider">
           <Slider data={productData} visibleItemsNumber={1}>
