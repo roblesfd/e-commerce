@@ -16,6 +16,7 @@ import ProductDetail from "./features/product/ProductDetail";
 import MyOrders from "./features/order/MyOrders";
 import WishList from "./views/WishList";
 import Micuenta from "./views/MyAccount";
+import NewPassword from "./features/auth/NewPassword";
 
 function App() {
   return (
@@ -40,7 +41,8 @@ function App() {
         <Route path="ingresar" element={<Login />} />
         <Route path="cuenta-creada" element={<CreatedAccount />} />
         <Route path="confirmar/:token" element={<ConfirmAccount />} />
-        <Route path="recuperacion-contraseña" element={<PasswordRecovery />} />
+        <Route path="recuperacion-contrasena" element={<PasswordRecovery />} />
+        <Route path="contrasena-nueva/:token" element={<NewPassword />} />
       </Route>
       <Route path="*" element={<NotFound />} />
     </Routes>

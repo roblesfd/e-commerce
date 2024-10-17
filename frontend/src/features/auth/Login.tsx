@@ -22,18 +22,24 @@ const Login = () => {
           inputName="password"
         />
         <FormFooter>
+          <Link
+            className="inline-block align-baseline font-medium text-sm text-primary-950"
+            to="/registrarse"
+          >
+            ¿No estas registrado? Crear una cuenta
+          </Link>
+          <Link
+            className="inline-block align-baseline font-medium text-sm text-primary-950"
+            to="/recuperacion-contrasena"
+          >
+            ¿Olvidaste tu contraseña?
+          </Link>
           <button
             type="submit"
             className="bg-primary-500 hover:bg-primary-600 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline"
           >
             Ingresar
           </button>
-          <Link
-            className="inline-block align-baseline font-bold text-sm text-primary-950"
-            to="/registrarse"
-          >
-            ¿No estas registrado? Crear una cuenta
-          </Link>
         </FormFooter>
       </FormContainer>
     </div>

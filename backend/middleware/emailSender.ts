@@ -52,7 +52,7 @@ const emailOlvidePassword = async (datos: EmailDatos): Promise<void> => {
     html: `
       <p>Hola ${nombre}, has solicitado reestablecer tu contraseña en e-commerce.com</p>
       <p>Haz clic en el siguiente enlace para generar una contraseña nueva:
-      <a href="${process.env.FRONTEND_URL_PROD}/auth/olvide-password/${token}">Reestablecer contraseña</a>
+      <a href="${process.env.FRONTEND_URL_DEV}/contrasena-nueva/${token}">Reestablecer contraseña</a>
       </p>
       <p>Si no solicitaste el cambio de contraseña puedes ignorar este correo.</p>
     `,

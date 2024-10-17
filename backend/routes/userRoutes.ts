@@ -14,4 +14,6 @@ router
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
 
+router.route("/user-by-token/:token").get(userController.getUserByToken);
+
 export default router;

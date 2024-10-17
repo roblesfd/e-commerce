@@ -12,4 +12,10 @@ router.route("/logout").post(authController.logout);
 
 router.route("/confirmar/:token").get(authController.confirm);
 
+router
+  .route("/request-password-reset")
+  .post(authController.requestPasswordReset);
+
+router.route("/set-new-password").post(authController.setNewPassword);
+
 export default router;

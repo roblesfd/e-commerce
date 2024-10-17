@@ -1,11 +1,13 @@
 import { useState } from "react";
+import { requestPasswordReset } from "./apiAuth";
 
 const PasswordRecovery = () => {
   const [email, setEmail] = useState("");
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Email:", email);
+    console.log(email);
+    requestPasswordReset({ email: email });
   };
 
   return (
@@ -18,7 +20,7 @@ const PasswordRecovery = () => {
           <div className="mb-4">
             <label className="block text-sm mb-6" htmlFor="email">
               Ingresa tu correo electrónico, te enviaremos un enlace a tu
-              bandeja de entrada para reestabler tu contraseña
+              bandeja de entrada para reestablecer tu contraseña
             </label>
             <input
               className="shadow appearance-none border rounded w-full py-2 px-3 leading-tight focus:outline-none focus:shadow-outline"

@@ -1,7 +1,9 @@
 import User from "../models/User";
 import bcrypt from "bcrypt";
-import jwt, { GetPublicKeyOrSecret, Secret } from "jsonwebtoken";
-import { Request, Response, NextFunction } from "express";
+import jwt, { Secret } from "jsonwebtoken";
+import { Request, Response } from "express";
+import { emailOlvidePassword } from "../middleware/emailSender";
+import crypto from "crypto";
 
 interface JwtPayload {
   UserInfo: {
@@ -116,7 +118,6 @@ const refresh = (req: Request, res: Response): void => {
             accessTokenSecret,
             { expiresIn: "15m" }
           );
-          console.log("Ok");
           res.status(200).json({ accessToken });
         })
         .catch((error) => {
@@ -128,118 +129,10 @@ const refresh = (req: Request, res: Response): void => {
   });
 };
 
-// const refresh = (req: Request, res: Response): void => {
-//     const cookies = req.cookies;
-
-//     if (!cookies?.jwt) {
-//       res.status(401).json({ message: "No estás autorizado" });
-//       return;
-//     }
-
-//     const refreshToken = cookies.jwt;
-//     const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
-//     const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-
-//     // Verificar que las variables de entorno están definidas
-//     if (!refreshTokenSecret || !accessTokenSecret) {
-//       res.status(500).json({ message: "Error en la configuración del servidor" });
-//       return;
-//     }
-
-//     jwt.verify(
-//       refreshToken,
-//       refreshTokenSecret,
-//       async (err: any, decoded: JwtPayload | undefined) => {
-//         if (err) {
-//           res.status(403).json({ message: "Prohibido" });
-//           return;
-//         }
-
-//         if (decoded) {
-//           try {
-//             const foundUser = await User.findOne({ username: decoded.username }).exec();
-
-//             if (!foundUser) {
-//               res.status(401).json({ message: "No estás autorizado" });
-//               return;
-//             }
-
-//             const accessToken = jwt.sign(
-//               {
-//                 UserInfo: {
-//                   username: foundUser.username,
-//                   role: foundUser.role,
-//                   id: foundUser._id,
-//                 },
-//               },
-//               accessTokenSecret, // Este valor ya está garantizado
-//               { expiresIn: "15m" }
-//             );
-
-//             res.json({ accessToken });
-//           } catch (error) {
-//             res.status(500).json({ message: "Error en el servidor" });
-//           }
-//         }
-//       }
-//     );
-//   };
-
-// const refresh = (req: Request, res: Response): void => {
-//   const cookies = req.cookies;
-
-//   if (!cookies?.jwt) {
-//     res.status(401).json({ message: "No estas autorizado" });
-//     return;
-//   }
-
-//   const refreshToken = cookies.jwt;
-
-//   jwt.verify(
-//     refreshToken,
-//     process.env.REFRESH_TOKEN_SECRET,
-//     async (err: any, decoded: JwtPayload | undefined) => {
-//       if (err) {
-//         res.status(403).json({ message: "Prohibido" });
-//         return;
-//       }
-//       if (decoded) {
-//         const foundUser = await User.findOne({
-//           username: decoded.username,
-//         }).exec();
-//         if (!foundUser) {
-//           res.status(401).json({ message: "No estas autorizado" });
-//           return;
-//         }
-
-//         const accessToken = jwt.sign(
-//           {
-//             UserInfo: {
-//               username: foundUser.username,
-//               role: foundUser.role,
-//               id: foundUser._id,
-//             },
-//           },
-//           process.env.ACCESS_TOKEN_SECRET as Secret,
-//           { expiresIn: "15m" }
-//         );
-
-//         res.json({ accessToken });
-//       }
-//     }
-//   );
-// };
-
 // @desc Logout
 // @route POST /auth/logout
 // @access Public
 const logout = (req: Request, res: Response): void => {
-  // const cookies = req.cookies;
-  // console.log(req);
-  // if (!cookies?.jwt) {
-  //   res.sendStatus(204);
-  //   return;
-  // }
   res.clearCookie("jwt", { httpOnly: true, sameSite: "none", secure: true });
   res.status(201).json({ message: "Cookie limpiada" });
 };
@@ -264,9 +157,69 @@ const confirm = async (req: Request, res: Response): Promise<any> => {
   return res.status(201).json({ message: "Tu cuenta ha sido confirmada" });
 };
 
+// @desc Genera un token para poder reestablecer una contraseña nueva y envia un
+// correo con enlace a un form para ingresar la contraseña nueva
+// @route POST /auth/request-password-reset
+// @access Public
+const requestPasswordReset = async (
+  req: Request,
+  res: Response
+): Promise<any> => {
+  const { email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    res.status(401).json({
+      message: "No existe una cuenta asociada con esta dirección de correo",
+    });
+    return;
+  }
+  let token = crypto.randomBytes(20).toString("hex");
+
+  user.token = token;
+  await user.save();
+
+  emailOlvidePassword({
+    nombre: user.name,
+    email: user.email,
+    token: user.token,
+  });
+
+  return res.status(201).json({
+    message: "Se envió un correo con un enlace para reestablecer tu contraseña",
+  });
+};
+
+// @desc Guarda una nueva contraseña del usuario
+// @route POST /auth/set-new-password
+// @access Public
+const setNewPassword = async (req: Request, res: Response): Promise<any> => {
+  const { password, email } = req.body;
+
+  const user = await User.findOne({ email });
+
+  if (!user) {
+    res.status(401).json({
+      message: "No se encontro el usuario",
+    });
+    return;
+  }
+
+  user.token = "";
+  user.password = await bcrypt.hash(password, 10);
+  await user.save();
+
+  return res.status(201).json({
+    message: "Tu contraseña ha cambiado con éxito. Ahora puedes iniciar sesión",
+  });
+};
+
 export default {
   login,
   refresh,
   logout,
   confirm,
+  requestPasswordReset,
+  setNewPassword,
 };

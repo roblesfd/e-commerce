@@ -103,6 +103,28 @@ const getUser = async (req: Request, res: Response): Promise<void> => {
   return;
 };
 
+// @desc Obtiene un usuario por su token
+// @route GET /user-by-token/:token
+// @access Private
+const getUserByToken = async (req: Request, res: Response): Promise<void> => {
+  try {
+    const { token } = req.params;
+    const user = await User.findOne({ token }).select("-password").exec();
+    if (user) {
+      console.log(user);
+      res.status(200).json(user);
+    } else {
+      res.status(400).json({ message: "Usuario no encontrado" });
+      return;
+    }
+  } catch (error) {
+    if (error instanceof Error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
+  return;
+};
+
 // @desc Actualiza datos de usuario
 // @route PATCH /users/:id
 // @access Private
@@ -192,6 +214,7 @@ export default {
   getAllUsers,
   createUser,
   getUser,
+  getUserByToken,
   updateUser,
   deleteUser,
 };

@@ -20,7 +20,7 @@ const onLogout = async () => {
       toast.success("Cerrando sesión");
       setTimeout(() => {
         location.href = "/ingresar";
-      }, 3000);
+      }, 2000);
     } else {
       toast.error(data.message || "Error al iniciar sesión.");
     }
@@ -53,7 +53,7 @@ const onLogin = async (values: LoginFormProps) => {
       toast.success("Has iniciado sesión");
       setTimeout(() => {
         location.href = "/";
-      }, 3000);
+      }, 2000);
     } else {
       toast.error(data.message || "Error al iniciar sesión.");
     }
@@ -89,7 +89,7 @@ const onSignup = async (values: SignupFormProps) => {
       toast.success("Cuenta creada exitosamente.");
       setTimeout(() => {
         location.href = "/cuenta-creada";
-      }, 3000);
+      }, 2000);
     } else {
       toast.error(data.message || "Hubo un problema con el registro.");
     }
@@ -118,4 +118,90 @@ const getAllUsers = async () => {
   }
 };
 
-export { onLogout, onLogin, onSignup, getAllUsers };
+const requestPasswordReset = async (values: { email: string }) => {
+  try {
+    const response = await fetch(
+      import.meta.env.VITE_BACKEND_URL + "/auth/request-password-reset",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      toast.success(data.message || "Revisa tu bandeja de correo");
+    } else {
+      toast.error(data.message || "Error.");
+    }
+  } catch (error) {
+    toast.error("Ocurrió un problema");
+  }
+};
+
+const sendNewPassword = async (values: { email: string; password: string }) => {
+  try {
+    const response = await fetch(
+      import.meta.env.VITE_BACKEND_URL + "/auth/set-new-password",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(values),
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      toast.success(data.message || "Contraseña actualizada con éxito");
+      setTimeout(() => {
+        window.location.href = "/ingresar";
+      }, 2000);
+    } else {
+      toast.error(data.message || "Ocurrió un problema");
+    }
+  } catch (error) {
+    toast.error("Ocurrió un problema");
+  }
+};
+
+const requestGetUserByToken = async () => {
+  const url = window.location.href;
+  const token = url.split("/").slice(-1)[0];
+
+  try {
+    const response = await fetch(
+      import.meta.env.VITE_BACKEND_URL + "/usuarios/user-by-token/" + token,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
+
+    const data = await response.json();
+
+    if (response.ok) {
+      return data;
+    }
+  } catch (error) {
+    toast.error("Ocurrió un problema");
+  }
+};
+
+export {
+  onLogout,
+  onLogin,
+  onSignup,
+  getAllUsers,
+  requestPasswordReset,
+  sendNewPassword,
+  requestGetUserByToken,
+};

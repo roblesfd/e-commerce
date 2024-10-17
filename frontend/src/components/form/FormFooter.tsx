@@ -7,7 +7,9 @@ export interface FormFooterProps {
 const FormFooter: React.FC<FormFooterProps> = ({ children }) => {
   return (
     <div>
-      <div className="flex items-center justify-between mt-8">{children}</div>
+      <div className="flex items-center justify-between mt-8 gap-6">
+        {children}
+      </div>
     </div>
   );
 };
